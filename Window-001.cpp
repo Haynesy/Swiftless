@@ -19,12 +19,21 @@ Install -
 
     Win32 Console application
     Add "glew32.lib" and "freeglut.lib" as linker libraries
+
+Compile
+	#build
+	main:
+		g++ Window-001.cpp -lglut -o Window
     
 */
 
 // Setup Header files
 // #include // GLEW
 // #include // GLUT
+
+#include "GL/glut.h"
+#include "GL/glu.h"
+#include "GL/gl.h"
 
 void display(void);
 

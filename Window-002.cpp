@@ -19,11 +19,15 @@
     Texture Matrix:
         Used to position and rotatre textures in much the same was as the 
         Model View Matrix ( You usually wont touch it )
+
+Compile:
+	g++ Window-002.cpp -lglut -lGLU -o Window
 */
 
 // Setup Header files
-// #include // GLEW
-// #include // GLUT
+#include "GL/glut.h"
+#include "GL/glu.h"
+#include "GL/gl.h"
 
 // function headers
 void display(void);
@@ -139,7 +143,7 @@ void reshape(int width, int height)
     GLfloat farClippingPlane    = 100.0f;
     
     // Set the projection perspective 
-    gluPerspective(fieldOfView, aspectRatio, nearClippingPlane, farClippingPlane);
+    gluPerspective(60, (GLfloat)width / (GLfloat)height, 1.0, 100.0);
     
     // Reset back to Model View Matrix
     glMatrixMode(GL_MODELVIEW);
