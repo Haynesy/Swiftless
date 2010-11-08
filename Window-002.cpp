@@ -1,5 +1,5 @@
 /*
-    File:       Window-001.cpp
+    File:       Window-002.cpp
     Author:     Adam Haynes
     Date:       08-11-2010
 */
