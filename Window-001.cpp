@@ -42,6 +42,10 @@ void display(void);
                 while(true) {
                     doApplicationStuff(); 
                 }
+    
+    End State: 
+        Creation and running of an application as well as closing and 
+        releasing all resources used by the application
 */
 int main(int argc, char **argv)
 {
@@ -79,6 +83,9 @@ int main(int argc, char **argv)
         - Load the Identity Matrix ( Poorly named me thinks )
             to reset our drawing locations
         - Flush all calls from OpenGL to the window
+    
+    End State:
+        Rendering of picture to the the window of the application
         
 */
 void display(void)
