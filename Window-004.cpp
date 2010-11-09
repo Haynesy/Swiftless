@@ -1,15 +1,27 @@
 /*
-    File:       Window-003.cpp
+    File:       Window-004.cpp
     Author:     Adam Haynes
     Date:       08-11-2010
 */
 
 /*
     Keyboard input
-        Key press amd key release as well as buffering.
-    
+        OpenGL Primitives - Square
+
+    Geometry types
+        GL_LINES
+        GL_LINE_STRIP
+        GL_LINE_LOOP
+        GL_POINTS
+        GL_POLYGON
+        GL_QUADS
+        GL_QUAD_STRIP
+        GL_TRIANGLES
+        GL_TRIANGLE_FAN
+        GL_TRIANGLE_STRIP
+
     Compile:
-        g++ Window-003.cpp -lglut -lGLU -o Window
+        g++ Window-004.cpp -lglut -lGLU -o Window
 */
 
 // Setup Header files
@@ -30,6 +42,9 @@
     void keySpecialPressed (int key, int x, int y);
     void keySpecialUp (int key, int x, int y);
     void keySpecialOperations(void);
+    
+    // Objects
+    void renderPrimitive(void);
     
 // Global Variables
     bool* keyStates = new bool[256]; // Hold 256 ASCII characters
@@ -103,6 +118,8 @@ int main(int argc, char **argv)
             information in other buffers will come later
         - Load the Identity Matrix ( Poorly named me thinks )
             to reset our drawing locations
+        - Move the scene back 5 units as the camera is located at ( 0, 0, 0 )
+        - Render object to screen ( Will render at location: 0, 0, -5 )
         - Flush all calls from OpenGL to the window
     End State:
         Rendering of picture to the the window of the application
@@ -126,6 +143,12 @@ void display(void)
     // Reset Identity Matrix
     glLoadIdentity();
 
+    // Move the scene 5 units back as the camera will be located at ( 0, 0, 0 )
+    glTranslatef(0.0f, 0.0f, -5.0f);
+    
+    // Render our objects
+    renderPrimitive();
+    
     // Flush all commands to the window
     glFlush();
 }
@@ -243,4 +266,22 @@ void keySpecialPressed (int key, int x, int y)
 void keySpecialUp (int key, int x, int y)
 {
     keySpecialStates[key] = false; // Set the state of the current key to released
+}
+
+/*
+    Function:   Renders and object to the viewport ( Square in thsi case )
+    Flow:       - Tell OpenGL that I want to begin to draw an object made 
+                    of quads: glBegin(GL_QUADS)
+                - Create quads using glVertex3f(x, y, z)
+                - Tell OpenGL that I have finished drawing the object: glEnd()
+    End State:  Object rendered to viewport and is visible to the user
+*/
+void renderPrimitive(void)
+{
+    glBegin(GL_QUADS);
+        glVertex3f(-1.0f,   -1.0f,  0.0f); // Bottom left corner
+        glVertex3f(-1.0f,   1.0f,   0.0f); // Top left corner
+        glVertex3f(1.0f,    1.0f,   0.0f); // Top right corner
+        glVertex3f(1.0f,    -1.0f,  0.0f); // Bottom right corner
+    glEnd();
 }
