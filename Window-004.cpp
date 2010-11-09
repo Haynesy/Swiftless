@@ -230,7 +230,7 @@ void initKeyboardState(void)
 */
 void keyOperations(void)
 {
-    if ( keyState['a'] ){
+    if ( keyStates['a'] ){
         // Do stuff
     }
 }
