@@ -1,15 +1,19 @@
 /*
-    File:       Window-003.cpp
+    File:       Window-005.cpp
     Author:     Adam Haynes
-    Date:       09-11-2010
+    Date:       12-11-2010
 */
 
 /*
-    Keyboard input
-        Key press amd key release as well as buffering.
-    
+    Colour
+
+    Colour Models
+        Red, Green, Blue
+        Red, Green, Blue, Alpha
+        They all take float between 0.0 and 1.0
+        
     Compile:
-        g++ Window-003.cpp -lglut -lGLU -o Window
+        g++ Window-005.cpp -lglut -lGLU -o Window
 */
 
 // Setup Header files
@@ -30,6 +34,9 @@
     void keySpecialPressed (int key, int x, int y);
     void keySpecialUp (int key, int x, int y);
     void keySpecialOperations(void);
+    
+    // Objects
+    void renderPrimitive(void);
     
 // Global Variables
     bool* keyStates = new bool[256]; // Hold 256 ASCII characters
@@ -103,6 +110,8 @@ int main(int argc, char **argv)
             information in other buffers will come later
         - Load the Identity Matrix ( Poorly named me thinks )
             to reset our drawing locations
+        - Move the scene back 5 units as the camera is located at ( 0, 0, 0 )
+        - Render object to screen ( Will render at location: 0, 0, -5 )
         - Flush all calls from OpenGL to the window
     End State:
         Rendering of picture to the the window of the application
@@ -126,6 +135,12 @@ void display(void)
     // Reset Identity Matrix
     glLoadIdentity();
 
+    // Move the scene 5 units back as the camera will be located at ( 0, 0, 0 )
+    glTranslatef(0.0f, 0.0f, -5.0f);
+    
+    // Render our objects
+    renderPrimitive();
+    
     // Flush all commands to the window
     glFlush();
 }
@@ -243,4 +258,25 @@ void keySpecialPressed (int key, int x, int y)
 void keySpecialUp (int key, int x, int y)
 {
     keySpecialStates[key] = false; // Set the state of the current key to released
+}
+
+/*
+    Function:   Renders and object to the viewport ( Square in thsi case )
+    Flow:       - Set colour to blue
+                - Tell OpenGL that I want to begin to draw an object made 
+                    of quads: glBegin(GL_QUADS)
+                - Create quads using glVertex3f(x, y, z)
+                - Tell OpenGL that I have finished drawing the object: glEnd()
+    End State:  Object rendered to viewport and is visible to the user
+*/
+void renderPrimitive(void)
+{
+    glColor3f(0.0f, 0.0f, 1.0f); // Set the colour of the square to blue
+
+    glBegin(GL_QUADS);
+        glVertex3f(-1.0f,   -1.0f,  0.0f); // Bottom left corner
+        glVertex3f(-1.0f,   1.0f,   0.0f); // Top left corner
+        glVertex3f(1.0f,    1.0f,   0.0f); // Top right corner
+        glVertex3f(1.0f,    -1.0f,  0.0f); // Bottom right corner
+    glEnd();
 }

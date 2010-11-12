@@ -1,15 +1,15 @@
 /*
-    File:       Window-003.cpp
+    File:       Window-007.cpp
     Author:     Adam Haynes
-    Date:       09-11-2010
+    Date:       12-11-2010
 */
 
 /*
-    Keyboard input
-        Key press amd key release as well as buffering.
-    
+    OpenGL 3D Shapes rotation and translation
+        
+
     Compile:
-        g++ Window-003.cpp -lglut -lGLU -o Window
+        g++ Window-007.cpp -lglut -lGLU -o Window
 */
 
 // Setup Header files
@@ -31,9 +31,16 @@
     void keySpecialUp (int key, int x, int y);
     void keySpecialOperations(void);
     
+    // Objects
+    void renderPrimitive(void);
+    
 // Global Variables
-    bool* keyStates = new bool[256]; // Hold 256 ASCII characters
-    bool* keySpecialStates = new bool[256]; // Hold 256 Special characters
+    bool* keyStates         = new bool[256]; // Hold 256 ASCII characters
+    bool* keySpecialStates  = new bool[256]; // Hold 256 Special characters
+    
+    bool movingUp           = false;
+    float yLocation         = 0.0f;
+    float yRotationAngle    = 0.0f;
 /*
     Function: Main entry point ( Application main )
 
@@ -78,9 +85,10 @@ int main(int argc, char **argv)
     // Create window with title
     glutCreateWindow("Basic Window!");
 
-    // Set display function ( Will be run on every refresh ) 
-    //      and the reshping function
+    // Setup Idle and Display to both use the 'display' function, 
+    // set the reshape event to use the 'reshape' funciton
     glutDisplayFunc(display);
+    glutIdleFunc(display);
     glutReshapeFunc(reshape); 
 
     // Set keyboard callback function to handle key pressing and releasing
@@ -103,6 +111,8 @@ int main(int argc, char **argv)
             information in other buffers will come later
         - Load the Identity Matrix ( Poorly named me thinks )
             to reset our drawing locations
+        - Move the scene back 5 units as the camera is located at ( 0, 0, 0 )
+        - Render object to screen ( Will render at location: 0, 0, -5 )
         - Flush all calls from OpenGL to the window
     End State:
         Rendering of picture to the the window of the application
@@ -126,8 +136,35 @@ void display(void)
     // Reset Identity Matrix
     glLoadIdentity();
 
+    // Move the scene 5 units back as the camera will be located at ( 0, 0, 0 )
+    glTranslatef(0.0f, 0.0f, -5.0f);
+    
+    // Transformation and Rotation code
+    glTranslatef(0.0f, yLocation, 0.0f);
+    glRotatef(yRotationAngle, 0.0f, 1.0f, 0.0f);
+    
+    // Render our objects
+    //renderPrimitive();
+    glutWireCube(2.0f);
+    
     // Flush all commands to the window
     glFlush();
+
+
+    // Update object position ( Rotation and Translation)
+    if ( movingUp )
+        yLocation -= 0.005f;
+    else
+        yLocation += 0.005f;
+
+    if ( yLocation) < -3.0f )
+        movingUp = false;
+    else if ( yLocation > 3.0f )
+        movingUp = true;
+    
+    yRotationAngle += 0.005f;
+    if ( yRotationAngle > 360.0f )
+        yRotationAngle -= 360.0f;
 }
 
 
@@ -243,4 +280,27 @@ void keySpecialPressed (int key, int x, int y)
 void keySpecialUp (int key, int x, int y)
 {
     keySpecialStates[key] = false; // Set the state of the current key to released
+}
+
+/*
+    Function:   Renders and object to the viewport ( Square in thsi case )
+    Flow:       - Set colour to blue
+                - Tell OpenGL that I want to begin to draw an object made 
+                    of quads: glBegin(GL_QUADS)
+                - Create quads using glVertex3f(x, y, z)
+                - Tell OpenGL that I have finished drawing the object: glEnd()
+    End State:  Object rendered to viewport and is visible to the user
+*/
+void renderPrimitive(void)
+{
+    glColor3f(0.0f, 0.0f, 1.0f); // Set the colour of the square to blue
+
+    glBegin(GL_QUADS);
+        glVertex3f(-1.0f,   -1.0f,  0.0f); // Bottom left corner
+        glVertex3f(-1.0f,   1.0f,   0.0f); // Top left corner
+        glVertex3f(1.0f,    1.0f,   0.0f); // Top right corner
+        glVertex3f(1.0f,    -1.0f,  0.0f); // Bottom right corner
+    glEnd();
+    
+
 }
