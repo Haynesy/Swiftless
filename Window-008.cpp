@@ -157,7 +157,7 @@ void display(void)
     else
         yLocation += 0.005f;
 
-    if ( yLocation) < -3.0f )
+    if ( yLocation < -3.0f )
         movingUp = false;
     else if ( yLocation > 3.0f )
         movingUp = true;
