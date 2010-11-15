@@ -286,7 +286,7 @@ void renderPrimitive(void)
         glVertex3f(1.0f,    -1.0f,  0.0f); // Bottom right corner
     glEnd();
     */
-
+	glScalef(2, 0.5, 1);
 	glRotatef(angle, 1.0, 0.0, 0.0);
     	glRotatef(angle, 0.0, 1.0, 0.0);
     	glRotatef(angle, 0.0, 0.0, 1.0);
