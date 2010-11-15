@@ -1,15 +1,15 @@
 /*
-    File:       Window-009.cpp
+    File:       Window-010.cpp
     Author:     Adam Haynes
-    Date:       12-11-2010
+    Date:       16-11-2010
 */
 
 /*
-    OpenGL Blending
+    OpenGL Scaling
         
 
     Compile:
-        g++ Window-009.cpp -lglut -lGLU -o Window
+        g++ Window-010.cpp -lglut -lGLU -o Window
 */
 
 // Setup Header files
@@ -267,11 +267,7 @@ void keySpecialUp (int key, int x, int y)
 
 /*
     Function:   Renders and object to the viewport ( Square in thsi case )
-    Flow:       - Set colour to blue
-                - Tell OpenGL that I want to begin to draw an object made 
-                    of quads: glBegin(GL_QUADS)
-                - Create quads using glVertex3f(x, y, z)
-                - Tell OpenGL that I have finished drawing the object: glEnd()
+    Flow:       Create objects
     End State:  Object rendered to viewport and is visible to the user
 */
 void renderPrimitive(void)
