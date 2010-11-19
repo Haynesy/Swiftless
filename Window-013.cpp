@@ -1,15 +1,15 @@
 /*
-    File:       Window-012.cpp
+    File:       Window-013.cpp
     Author:     Adam Haynes
     Date:       19-11-2010
 */
 
 /*
-    OpenGL Material Lighting
+    OpenGL Lighting types
 
     Compile:
         -E will give out additional compiling information
-        g++ -E Window-012.cpp -lglut -lGLU -o Window
+        g++ -E Window-013.cpp -lglut -lGLU -o Window
 */
 
 // Setup Header files
@@ -32,17 +32,23 @@
     void keySpecialOperations(void);
 
     // Lighting
-    GLfloat redDiffuseMaterial[]        = {1.0, 0.0, 0.0}; //set the material to red
-    GLfloat whiteSpecularMaterial[]     = {1.0, 1.0, 1.0}; //set the material to white
-    GLfloat greenEmissiveMaterial[]     = {0.0, 1.0, 0.0}; //set the material to green
-    GLfloat whiteSpecularLight[]        = {1.0, 1.0, 1.0}; //set the light specular to white
-    GLfloat blackAmbientLight[]         = {0.0, 0.0, 0.0}; //set the light ambient to black
-    GLfloat whiteDiffuseLight[]         = {1.0, 1.0, 1.0}; //set the diffuse light to white
-    GLfloat blankMaterial[]             = {0.0, 0.0, 0.0}; //set the diffuse light to white
-    GLfloat mShininess[]                = {128}; //set the shininess of the material
-    bool diffuse                        = false;
-    bool emissive                       = false;
-    bool specular                       = false;
+    
+        // Diffuse colour
+        GLfloat diffuseLightRed             = 1.0;
+        GLfloat diffuseLightGreen           = 1.0;
+        GLfloat diffuseLightBlue            = 1.0;
+
+        // Ambient colour
+        GLfloat ambientLightRed             = 1.0;
+        GLfloat ambientLightGreen           = 1.0;
+        GLfloat ambientLightBlue            = 1.0;
+
+        // Light position
+        GLfloat lightX                      = 0.0;
+        GLfloat lightY                      = 0.0;
+        GLfloat lightZ                      = 1.0;
+        GLfloat lightW}                     = 0.0;
+
     void initLighting(void);
     void light(void);
     
@@ -153,9 +159,19 @@ void display(void)
 
     // Clear the color buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+    
+    // Set lights up
+    GLfloat DiffuseLight[] = { diffuseLightRed, diffuseLightGreen, diffuseLightBlue };
+    GLfloat AmbientLight[] = { ambientLightRed, ambientLightGreen, ambientLightBlue };
+    glLightfv (GL_LIGHT0, GL_DIFFUSE, DiffuseLight); //change the light accordingly
+    glLightfv (GL_LIGHT1, GL_AMBIENT, AmbientLight); //change the light accordingly
+    
+    // Set light position
+    GLfloat LightPosition[] = {lightX, lightY, lightZ, lightW}; // lightW indicates if it is a point light
+    glLightfv (GL_LIGHT0, GL_POSITION, LightPosition); //change the light accordingly
+    
     // Reset Identity Matrix
-    glLoadIdentity();
+    //glLoadIdentity();
 
     // Light the scene
     light();
@@ -250,47 +266,36 @@ void initKeyboardState(void)
 */
 void keyOperations(void)
 {
+    // Light values
+    if ( keyStates['r'] ) {
+        dlr = 1.0; //change light to red
+        dlg = 0.0;
+        dlb = 0.0;
+    }
+    if ( keyStates['g'] ) {
+        dlr = 0.0; //change light to green
+        dlg = 1.0;
+        dlb = 0.0;
+    }
+    if ( keyStates['b'] ) {
+        dlr = 0.0; //change light to blue
+        dlg = 0.0;
+        dlb = 1.0;
+    }
+    
+    // Position
+    if ( keyStates['w'] )
+        ly += 10.0; //move the light up
+
     if ( keyStates['s'] )
-        if ( !specular )
-        {
-            specular = true;
-            glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, whiteSpecularMaterial);
-            glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mShininess);
-        }
-        else if ( specular )
-        {
-            specular = false;
-            glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, blankMaterial);
-            glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, blankMaterial);
-        }
+        ly -= 10.0; //move the light down
+
+    if ( keyStates['a'] )
+        lx -= 10.0; //move the light left
 
     if ( keyStates['d'] )
-        if ( !diffuse )
-        {
-            diffuse = true;
-            glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, redDiffuseMaterial);
-        }
-        else if ( diffuse )
-        {
-            diffuse = false;
-            glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, blankMaterial);
-        }
+        lx += 10.0; //move the light right
 
-    if ( keyStates['e'] )
-        if ( !emissive )
-        {
-            emissive = true;
-            glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, greenEmissiveMaterial);
-        }
-        else if ( emissive )
-        {
-            emissive = false;
-            glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, blankMaterial);
-        }
-
-    if ( keyStates['a'] ){
-        // Do stuff
-    }
 }
 
 /*
@@ -344,15 +349,16 @@ void renderPrimitive(void)
 
 void initLighting(void)
 {
-    //glEnable(GL_COLOR_MATERIAL);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
+    glEnable (GL_DEPTH_TEST); //enable the depth testing
+    glEnable (GL_LIGHTING); //enable the lighting
+    glEnable (GL_LIGHT0); //enable LIGHT0, our Diffuse Light
+    glEnable (GL_LIGHT1); //enable LIGHT1, our Ambient Light
+    glShadeModel (GL_SMOOTH); //set the shader to smooth shader
 }
 
 void light(void)
 {
-    glLightfv(GL_LIGHT0, GL_SPECULAR, whiteSpecularLight);
-    glLightfv(GL_LIGHT0, GL_AMBIENT, blackAmbientLight);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteDiffuseLight);    
+    //glLightfv(GL_LIGHT0, GL_SPECULAR, whiteSpecularLight);
+    //glLightfv(GL_LIGHT0, GL_AMBIENT, blackAmbientLight);
+    //glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteDiffuseLight);    
 }
