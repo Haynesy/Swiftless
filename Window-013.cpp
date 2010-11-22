@@ -47,7 +47,7 @@
         GLfloat lightX                      = 0.0;
         GLfloat lightY                      = 0.0;
         GLfloat lightZ                      = 1.0;
-        GLfloat lightW}                     = 0.0;
+        GLfloat lightW                      = 0.0;
 
     void initLighting(void);
     void light(void);
@@ -63,6 +63,9 @@
     float yLocation         = 0.0f;
     float yRotationAngle    = 0.0f;
 GLfloat angle = 0.0;
+GLfloat ViewPositionX = 0.0;
+GLfloat ViewPositionZ = -5.0;
+GLfloat ViewPositionY = 0.0;
 /*
     Function: Main entry point ( Application main )
 
@@ -96,7 +99,7 @@ int main(int argc, char **argv)
     glutInit(&argc, argv);
 
     // Set up a basic buffer (only single buffered for now)
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH);
 
     // Set width ,height, X Pos and Y pos of window
     glutInitWindowSize(windowWidth, windowHeight);
@@ -155,11 +158,13 @@ void display(void)
     keySpecialOperations();
 
     // Clear color is set to RED
-    glClearColor(0.0f, 0.0f, 0.5f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     // Clear the color buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
+   
+	glLoadIdentity();
+ 
     // Set lights up
     GLfloat DiffuseLight[] = { diffuseLightRed, diffuseLightGreen, diffuseLightBlue };
     GLfloat AmbientLight[] = { ambientLightRed, ambientLightGreen, ambientLightBlue };
@@ -174,10 +179,10 @@ void display(void)
     //glLoadIdentity();
 
     // Light the scene
-    light();
+    //light();
     
     // Look at a point
-    gluLookAt (0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    gluLookAt (ViewPositionX, ViewPositionY, ViewPositionZ - 10.0, ViewPositionX, ViewPositionY, ViewPositionZ, 0.0, 1.0, 0.0);
     
     // Render objects
     renderPrimitive();
@@ -186,7 +191,7 @@ void display(void)
     glutSwapBuffers();
     
     // Increase angle
-    angle++;
+    angle += 0.1;
 }
 
 
@@ -268,33 +273,43 @@ void keyOperations(void)
 {
     // Light values
     if ( keyStates['r'] ) {
-        dlr = 1.0; //change light to red
-        dlg = 0.0;
-        dlb = 0.0;
+        diffuseLightRed 	= 1.0; //change light to red
+        diffuseLightGreen 	= 0.0;
+        diffuseLightBlue 	= 0.0;
     }
     if ( keyStates['g'] ) {
-        dlr = 0.0; //change light to green
-        dlg = 1.0;
-        dlb = 0.0;
+        diffuseLightRed 	= 0.0; //change light to green
+        diffuseLightGreen	= 1.0;
+        diffuseLightBlue 	= 0.0;
     }
     if ( keyStates['b'] ) {
-        dlr = 0.0; //change light to blue
-        dlg = 0.0;
-        dlb = 1.0;
+        diffuseLightRed 	= 0.0; //change light to blue
+        diffuseLightGreen 	= 0.0;
+        diffuseLightBlue 	= 1.0;
     }
     
-    // Position
-    if ( keyStates['w'] )
-        ly += 10.0; //move the light up
+	// Viewer Position
+	if ( keyStates['w'] )
+		ViewPositionZ += 0.1;
+	if ( keyStates['s'] )
+		ViewPositionZ -= 0.1;
+	if ( keyStates['a'] )
+		ViewPositionX += 0.1;
+	if ( keyStates['d'] )
+		ViewPositionX -= 0.1;
 
-    if ( keyStates['s'] )
-        ly -= 10.0; //move the light down
+    // Light Position
+    if ( keyStates['i'] )
+        lightY += 1.0; //move the light up
 
-    if ( keyStates['a'] )
-        lx -= 10.0; //move the light left
+    if ( keyStates['k'] )
+        lightY -= 1.0; //move the light down
 
-    if ( keyStates['d'] )
-        lx += 10.0; //move the light right
+    if ( keyStates['j'] )
+        lightX -= 1.0; //move the light left
+
+    if ( keyStates['l'] )
+        lightX += 1.0; //move the light right
 
 }
 
@@ -340,6 +355,7 @@ void keySpecialUp (int key, int x, int y)
 */
 void renderPrimitive(void)
 {
+
     glRotatef(angle, 1.0, 0.0, 0.0);
     glRotatef(angle, 0.0, 1.0, 0.0);
     glRotatef(angle, 0.0, 0.0, 1.0);
@@ -358,7 +374,9 @@ void initLighting(void)
 
 void light(void)
 {
-    //glLightfv(GL_LIGHT0, GL_SPECULAR, whiteSpecularLight);
-    //glLightfv(GL_LIGHT0, GL_AMBIENT, blackAmbientLight);
-    //glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteDiffuseLight);    
+/*    
+glLightfv(GL_LIGHT0, GL_SPECULAR, whiteSpecularLight);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, blackAmbientLight);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteDiffuseLight);    
+*/
 }
