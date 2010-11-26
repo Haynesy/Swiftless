@@ -13,7 +13,14 @@
 */
 
 // Setup Header files
-    #include "GL/glut.h"
+    #ifdef __WIN32__
+        #include <windows.h>
+    #endif
+    #ifdef __APPLE__
+        #include "GLUT/glut.h"
+    #else
+        #include "GL/glut.h"
+    #endif
     #include "GL/glu.h"
     #include "GL/gl.h"
 
@@ -32,7 +39,7 @@
     void keySpecialOperations(void);
 
     // Lighting
-    
+
         // Diffuse colour
         GLfloat diffuseLightRed             = 1.0;
         GLfloat diffuseLightGreen           = 1.0;
@@ -51,7 +58,7 @@
 
     void initLighting(void);
     void light(void);
-    
+
     // Objects
     void renderPrimitive(void);
 
@@ -71,7 +78,7 @@ GLfloat ViewPositionY = 0.0;
 
     Flow:
         - Init GLUT
-        - Setup Window Buffers ( Double render buffer as well as support 
+        - Setup Window Buffers ( Double render buffer as well as support
             for Alpha, and Depth buffer)
         - Setup Window Width, Height, X, Y Position
         - Create Window with title
@@ -82,10 +89,10 @@ GLfloat ViewPositionY = 0.0;
         - Tell GLUT to enter main loop
             E.g
                 while( running ) {
-                    doApplicationStuff(); 
+                    doApplicationStuff();
                 }
-    End State: 
-        Creation and running of an application as well as closing and 
+    End State:
+        Creation and running of an application as well as closing and
         releasing all resources used by the application
 */
 int main(int argc, char **argv)
@@ -114,11 +121,11 @@ int main(int argc, char **argv)
     // Setup lighting
     initLighting();
 
-    // Setup Idle and Display to both use the 'display' function, 
+    // Setup Idle and Display to both use the 'display' function,
     // set the reshape event to use the 'reshape' funciton
     glutDisplayFunc(display);
     glutIdleFunc(display);
-    glutReshapeFunc(reshape); 
+    glutReshapeFunc(reshape);
 
     // Set keyboard callback function to handle key pressing and releasing
     glutKeyboardFunc(keyPressed);
@@ -133,7 +140,7 @@ int main(int argc, char **argv)
 /*
     Function: Runs the application display
     Flow:
-        - Check key operations as they may have adverse effects on the 
+        - Check key operations as they may have adverse effects on the
             display state e.g may require the display matrix to move forward
         - Set Clear color ( RED in this case )
         - Clear the color buffer ( Using GL_COLOR_BUFFER_BIT )
@@ -150,9 +157,9 @@ int main(int argc, char **argv)
 */
 void display(void)
 {
-    /*  
+    /*
         Check any keyboard operations that may alter the display of the
-        next frame 
+        next frame
     */
     keyOperations();
     keySpecialOperations();
@@ -162,34 +169,34 @@ void display(void)
 
     // Clear the color buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   
+
 	glLoadIdentity();
- 
+
     // Set lights up
     GLfloat DiffuseLight[] = { diffuseLightRed, diffuseLightGreen, diffuseLightBlue };
     GLfloat AmbientLight[] = { ambientLightRed, ambientLightGreen, ambientLightBlue };
     glLightfv (GL_LIGHT0, GL_DIFFUSE, DiffuseLight); //change the light accordingly
     glLightfv (GL_LIGHT1, GL_AMBIENT, AmbientLight); //change the light accordingly
-    
+
     // Set light position
     GLfloat LightPosition[] = {lightX, lightY, lightZ, lightW}; // lightW indicates if it is a point light
     glLightfv (GL_LIGHT0, GL_POSITION, LightPosition); //change the light accordingly
-    
+
     // Reset Identity Matrix
     //glLoadIdentity();
 
     // Light the scene
     //light();
-    
+
     // Look at a point
     gluLookAt (ViewPositionX, ViewPositionY, ViewPositionZ - 10.0, ViewPositionX, ViewPositionY, ViewPositionZ, 0.0, 1.0, 0.0);
-    
+
     // Render objects
     renderPrimitive();
-    
+
     // Swap the old buffer out for the new rendered image
     glutSwapBuffers();
-    
+
     // Increase angle
     angle += 0.1;
 }
@@ -212,9 +219,9 @@ void reshape(int width, int height)
     // Note: 0, 0 corresponds to the bottom left corner
     glViewport(0, 0, (GLsizei)width, (GLsizei)height);
 
-    /* 
-        Switch to the projection matrix so that we can manipulate 
-        how our scene is viewed 
+    /*
+        Switch to the projection matrix so that we can manipulate
+        how our scene is viewed
     */
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity(); // Reset projection matrix so as not to cause artifacts
@@ -224,7 +231,7 @@ void reshape(int width, int height)
     GLfloat nearClippingPlane   = 1.0f;
     GLfloat farClippingPlane    = 100.0f;
 
-    // Set the projection perspective 
+    // Set the projection perspective
     gluPerspective(fieldOfView, aspectRatio, nearClippingPlane, farClippingPlane);
 
     // Reset back to Model View Matrix
@@ -287,7 +294,7 @@ void keyOperations(void)
         diffuseLightGreen 	= 0.0;
         diffuseLightBlue 	= 1.0;
     }
-    
+
 	// Viewer Position
 	if ( keyStates['w'] )
 		ViewPositionZ += 0.1;
@@ -318,12 +325,12 @@ void keyOperations(void)
     Flow:
     End State:
 */
-void keySpecialOperations(void) 
+void keySpecialOperations(void)
 {
-    if (keySpecialStates[GLUT_KEY_LEFT]) { 
-        // If the left arrow key has been pressed  
-        // Perform left arrow key operations  
-    } 
+    if (keySpecialStates[GLUT_KEY_LEFT]) {
+        // If the left arrow key has been pressed
+        // Perform left arrow key operations
+    }
 }
 
 /*
@@ -374,9 +381,9 @@ void initLighting(void)
 
 void light(void)
 {
-/*    
+/*
 glLightfv(GL_LIGHT0, GL_SPECULAR, whiteSpecularLight);
     glLightfv(GL_LIGHT0, GL_AMBIENT, blackAmbientLight);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteDiffuseLight);    
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteDiffuseLight);
 */
 }
