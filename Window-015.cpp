@@ -1,15 +1,15 @@
 /*
-    File:       Window-014.cpp
+    File:       Window-015.cpp
     Author:     Adam Haynes
     Date:       04-12-2010
 */
 
 /*
-    OpenGL Fog
+    OpenGL Fog Types
 
     Compile:
         
-        g++ Window-014.cpp -Wall -lglut -lGLU -o Window
+        g++ Window-015.cpp -Wall -lglut -lGLU -o Window
 */
 
 // Setup Header files
@@ -75,7 +75,7 @@
 	GLfloat ViewPositionY 	= 0.0;
 
 	GLfloat fogDensity	= 0.8f;
-	GLfloat fogColor[4]	= { 0.5, 0.5, 0.5, 1.0 };
+	GLfloat fogColor[4]	= { 0.5, 0.5, 1.0, 1.0 };
 /*
     Function: Main entry point ( Application main )
 
@@ -387,6 +387,8 @@ void initLighting(void)
 	glFogfv(GL_FOG_COLOR, fogColor);
 	glFogf(GL_FOG_DENSITY, fogDensity);
 	glHint(GL_FOG_HINT, GL_NICEST);
+	glFogf(GL_FOG_START, 10);
+	glFogf(GL_FOG_END, 100);
 }
 
 void light(void)
