@@ -10,6 +10,9 @@
 	float positionz[10];
 	float positionx[10];
 
+// Mouse positions
+	float lastx, lasty;
+
 void cubepositions (void) 
 { //set the positions of the cubes
 
@@ -31,6 +34,16 @@ void cube (void)
     	glutSolidCube(2); //draw the cube
       glPopMatrix();
     }
+}
+
+void mouseMovement(int x, int y) 
+{
+	int diffx=x-lastx; //check the difference between the current x and the last x position
+	int diffy=y-lasty; //check the difference between the current y and the last y position
+	lastx=x; //set lastx to the current x position
+	lasty=y; //set lasty to the current y position
+	xrot += (float) diffy; //set the xrot to xrot with the addition of the difference in the y position
+	yrot += (float) diffx;// set the xrot to yrot with the addition of the difference in the x position
 }
 
 void init (void) 
@@ -109,13 +122,17 @@ void keyboard (unsigned char key, int x, int y)
     }
     if (key=='d')
     {
-    	yrot += 1;
-    	if (yrot >360) yrot -= 360;
+    	float yrotrad;
+		yrotrad = (yrot / 180 * 3.141592654f);
+		xpos += float(cos(yrotrad)) * 0.2;
+		zpos += float(sin(yrotrad)) * 0.2;	
     }
     if (key=='a')
     {
-    	yrot -= 1;
-    	if (yrot < -360)yrot += 360;
+    	float yrotrad;
+		yrotrad = (yrot / 180 * 3.141592654f);
+		xpos -= float(cos(yrotrad)) * 0.2;
+		zpos -= float(sin(yrotrad)) * 0.2;	
     }
     if (key==27)
     {
@@ -134,7 +151,7 @@ int main (int argc, char **argv)
     glutIdleFunc (display); //update any variables in display, display can be changed to anyhing, as long you move the 
 	 //variables to be updated, in this case, angle++;
     glutReshapeFunc (reshape); //reshape the window accordingly
-
+		glutPassiveMotionFunc(mouseMovement);
     glutKeyboardFunc (keyboard); //check the keyboard
     glutMainLoop (); //call the main loop
     return 0;
