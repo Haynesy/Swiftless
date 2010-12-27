@@ -1,5 +1,5 @@
 /*
-    File:       Window-015.cpp
+    File:       Window-016.cpp
     Author:     Adam Haynes
     Date:       04-12-2010
 */
@@ -9,76 +9,77 @@
 
     Compile:
         
-        g++ Window-015.cpp -Wall -lglut -lGLU -o Window
+        g++ Window-016.cpp -Wall -lglut -lGLU -o Window
 */
 
 // Setup Header files
-    #ifdef __WIN32__
-        #include <windows.h>
-    #endif
-    #ifdef __APPLE__
-        #include "GLUT/glut.h"
-    #else
-        #include "GL/glut.h"
-    #endif
-    #include "GL/glu.h"
-    #include "GL/gl.h"
+   #ifdef __WIN32__
+      #include <windows.h>
+   #endif
+   #ifdef __APPLE__
+      #include "GLUT/glut.h"
+   #else
+      #include "GL/glut.h"
+   #endif
+   #include "GL/glu.h"
+   #include "GL/gl.h"
 
-    #include "stdio.h"
-    #include "stdlib.h"
+   #include "stdio.h"
+   #include "stdlib.h"
+	#include <iostream>
 
 // Function headers
-    // Display Functions
-    void display(void);
-    void reshape(int width, int height);
+   // Display Functions
+   void display(void);
+   void reshape(int width, int height);
 
-    // Keyboard Functions
-    void keyPressed(unsigned char key, int x, int y);
-    void keyUp(unsigned char key, int x, int y);
-    void initKeyboardState(void);
-    void keyOperations(void);
-    void keySpecialPressed (int key, int x, int y);
-    void keySpecialUp (int key, int x, int y);
-    void keySpecialOperations(void);
+   // Keyboard Functions
+   void keyPressed(unsigned char key, int x, int y);
+   void keyUp(unsigned char key, int x, int y);
+   void initKeyboardState(void);
+   void keyOperations(void);
+   void keySpecialPressed (int key, int x, int y);
+   void keySpecialUp (int key, int x, int y);
+   void keySpecialOperations(void);
 
-    // Texture Functions
-    GLuint LoadTexture(const char * filename, int width, int height);
-    void FreeTexture( GLuint texture );
+   // Texture Functions
+   GLuint LoadTexture(const char * filename, int width, int height);
+   void FreeTexture( GLuint texture );
     
-    // Lighting
+// Lighting
 
-        // Diffuse colour
-        GLfloat diffuseLightRed             = 1.0;
-        GLfloat diffuseLightGreen           = 1.0;
-        GLfloat diffuseLightBlue            = 1.0;
+   // Diffuse colour
+	GLfloat diffuseLightRed             = 1.0;
+   GLfloat diffuseLightGreen           = 1.0;
+   GLfloat diffuseLightBlue            = 1.0;
 
-        // Ambient colour
-        GLfloat ambientLightRed             = 1.0;
-        GLfloat ambientLightGreen           = 1.0;
-        GLfloat ambientLightBlue            = 1.0;
+	// Ambient colour
+   GLfloat ambientLightRed             = 1.0;
+   GLfloat ambientLightGreen           = 1.0;
+   GLfloat ambientLightBlue            = 1.0;
 
-        // Light position
-        GLfloat lightX                      = 0.0;
-        GLfloat lightY                      = 0.0;
-        GLfloat lightZ                      = 1.0;
-        GLfloat lightW                      = 0.0;
+	// Light position
+   GLfloat lightX                      = 0.0;
+   GLfloat lightY                      = 0.0;
+   GLfloat lightZ                      = 1.0;
+   GLfloat lightW                      = 0.0;
 
-    	void initLighting(void);
-    	void light(void);
+  	void initLighting(void);
+  	void light(void);
 
-    // Objects
-    	void renderPrimitive(void);
+// Objects
+   void renderPrimitive(void);
 
 // Global Variables
-    	bool* keyStates         = new bool[256]; // Hold 256 ASCII characters
-    	bool* keySpecialStates  = new bool[256]; // Hold 256 Special characters
+   bool* keyStates         = new bool[256]; // Hold 256 ASCII characters
+   bool* keySpecialStates  = new bool[256]; // Hold 256 Special characters
 
-    	bool movingUp           = false;
-    	float yLocation         = 0.0f;
-    	float yRotationAngle    = 0.0f;
-    	GLfloat angle 		= 0.0;
-    	GLfloat ViewPositionX 	= 0.0;
-    	GLfloat ViewPositionZ 	= -5.0;
+   bool movingUp           = false;
+   float yLocation         = 0.0f;
+   float yRotationAngle    = 0.0f;
+   GLfloat angle 		= 0.0;
+   GLfloat ViewPositionX 	= 0.0;
+   GLfloat ViewPositionZ 	= -5.0;
 	GLfloat ViewPositionY 	= 0.0;
 
 	GLfloat fogDensity	= 0.8f;
@@ -145,11 +146,8 @@ int main(int argc, char **argv)
     glutSpecialFunc(keySpecialPressed);
     glutSpecialUpFunc(keySpecialUp);
     
-    //Load our texture
-    texture = LoadTexture( "texture.raw", 256, 256 );
-    
     // Run the main loop which will handle closing of the application
-    glutMainLoop();
+	 glutMainLoop();
 
     // Free the texture
     FreeTexture( texture );
@@ -182,6 +180,10 @@ void display(void)
     keyOperations();
     keySpecialOperations();
 
+	texture = LoadTexture("texture.raw", 256, 256);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
     // Clear color is set to RED
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -200,6 +202,8 @@ void display(void)
     GLfloat LightPosition[] = {lightX, lightY, lightZ, lightW}; // lightW indicates if it is a point light
     glLightfv (GL_LIGHT0, GL_POSITION, LightPosition); //change the light accordingly
 
+
+
     // Reset Identity Matrix
     //glLoadIdentity();
     
@@ -207,7 +211,8 @@ void display(void)
     //light();
 
     // Look at a point
-    gluLookAt (ViewPositionX, ViewPositionY, ViewPositionZ - 10.0, ViewPositionX, ViewPositionY, ViewPositionZ, 0.0, 1.0, 0.0);
+    gluLookAt (ViewPositionX, ViewPositionY, ViewPositionZ - 10.0, 
+	 	ViewPositionX, ViewPositionY, ViewPositionZ, 0.0, 1.0, 0.0);
 
     // Render objects
     renderPrimitive();
@@ -336,6 +341,8 @@ void keyOperations(void)
     if ( keyStates['l'] )
         lightX += 1.0; //move the light right
 
+	if (keyStates[27])
+		exit(0);
 }
 
 /*
@@ -387,14 +394,14 @@ void renderPrimitive(void)
     glColor3f(0.0, 0.0, 1.00);
     glutSolidCube(2);
     */
-    glBindTexture( GL_TEXTURE_2D, texture ); //bind our texture to our shape
-    glRotatef( angle, 1.0f, 1.0f, 1.0f );
-    glBegin (GL_QUADS);
-	glTexCoord2d(0.0,0.0); glVertex2d(-1.0,-1.0); 
-	glTexCoord2d(1.0,0.0); glVertex2d(+1.0,-1.0); 
-	glTexCoord2d(1.0,1.0); glVertex2d(+1.0,+1.0);
-	glTexCoord2d(0.0,1.0); glVertex2d(-1.0,+1.0);
-    glEnd();
+   glBindTexture( GL_TEXTURE_2D, texture ); //bind our texture to our shape
+   glRotatef( angle, 1.0f, 1.0f, 1.0f );
+	glBegin (GL_QUADS);
+		glTexCoord2d(0.0,0.0); glVertex2d(-1.0,-1.0); 
+		glTexCoord2d(1.0,0.0); glVertex2d(+1.0,-1.0); 
+		glTexCoord2d(1.0,1.0); glVertex2d(+1.0,+1.0);
+		glTexCoord2d(0.0,1.0); glVertex2d(-1.0,+1.0);
+   glEnd();
 }
 
 void initLighting(void)
@@ -427,7 +434,7 @@ glLightfv(GL_LIGHT0, GL_SPECULAR, whiteSpecularLight);
 
 GLuint LoadTexture(const char * filename, int width, int height)
 {
-	GLuint texture;
+	//GLuint texture;
 	unsigned char * data;
 	FILE * file;
 	int filesize = width * height * 3;	
@@ -449,7 +456,8 @@ GLuint LoadTexture(const char * filename, int width, int height)
 	glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S , GL_REPEAT );
 	glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
 	
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, 
+		GL_UNSIGNED_BYTE, data);
 	free( data ); 
 	return texture; 
 }
