@@ -13,6 +13,9 @@
 // Mouse positions
 	float lastx, lasty;
 
+// Distance camera from character target
+	float cRadius = 10.0f;
+
 void cubepositions (void) 
 { //set the positions of the cubes
 
@@ -42,8 +45,8 @@ void mouseMovement(int x, int y)
 	int diffy=y-lasty; //check the difference between the current y and the last y position
 	lastx=x; //set lastx to the current x position
 	lasty=y; //set lasty to the current y position
-	xrot += (float) diffy /4; //set the xrot to xrot with the addition of the difference in the y position
-	yrot += (float) diffx /4;// set the xrot to yrot with the addition of the difference in the x position
+	xrot += (float) diffy; //set the xrot to xrot with the addition of the difference in the y position
+	yrot += (float) diffx;// set the xrot to yrot with the addition of the difference in the x position
 }
 
 void init (void) 
@@ -72,8 +75,24 @@ void display (void)
     glClearColor (0.0,0.0,0.0,1.0); //clear the screen to black
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear the color buffer and the depth buffer
     glLoadIdentity();  
-    camera();
-    enable();
+   
+	// Camera X
+	glTranslatef(0.0f, 0.0f, -cRadius); // translate camera behind target character 
+	 glRotatef(xrot / 4, 1.0, 0.0, 0.0);
+	 
+	 // Main Character
+	 glColor3f(1.0f, 0.0f, 0.0f);
+	 glutSolidCube(2);
+	 
+	 // Camera Y
+	 glRotatef(yrot / 4, 0.0, 1.0, 0.0);
+
+	 // Move Scenery
+	 glTranslated(-xpos, 0.0, -zpos);
+	 
+	 glColor3f(1.0f, 1.0f, 1.0f);
+	 //camera();
+    //enable();
     cube(); //call the cube drawing function
     glutSwapBuffers(); //swap the buffers
     angle++; //increase the angle
@@ -144,7 +163,7 @@ int main (int argc, char **argv)
 {
     glutInit (&argc, argv);
     glutInitDisplayMode (GLUT_DOUBLE | GLUT_DEPTH); //set the display to Double buffer, with depth
-    glutInitWindowSize (500, 500); //set the window size glutInitWindowPosition (100, 100); //set the position of the window
+    glutInitWindowSize (1440, 900); //set the window size glutInitWindowPosition (100, 100); //set the position of the window
     glutCreateWindow ("A basic OpenGL Window : Testing Camera"); //the caption of the window
     init (); //call the init function
     glutDisplayFunc (display); //use the display function to draw everything
