@@ -154,6 +154,9 @@ int main (int argc, char **argv)
     glutIdleFunc (display);
     glutReshapeFunc (reshape);
     glutMainLoop ();
+
+	 freetexture(texture[0]);
+	 freetexture(texture[1]);
     return 0;
 }
 
